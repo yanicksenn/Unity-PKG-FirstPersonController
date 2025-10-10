@@ -4,6 +4,15 @@
 
 A basic first person controller that can pick up and throw objects.
 
+## Installation
+1. Open "Package Manager"
+2. Choose "Add package from git URL..."
+3. Use the HTTPS URL of this repository:
+```
+https://github.com/yanicksenn/Unity-PKG-FirstPersonController.git#1.0.0
+```
+4. Click "Add"
+
 ## Basic Idea
 
 1. Wire mouse position delta data via the InputSystem to the player controller
