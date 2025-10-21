@@ -345,11 +345,12 @@ GameObject:
   - component: {fileID: 2807265831966184832}
   - component: {fileID: 9117661832013095477}
   - component: {fileID: 8823919336157315769}
+  - component: {fileID: 489345601468466201}
   - component: {fileID: 3127714908871797232}
   - component: {fileID: 4145639765469583012}
   - component: {fileID: 7457633392806511544}
   m_Layer: 6
-  m_Name: Player
+  m_Name: Physics Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -489,6 +490,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 4454939996160948271}
   lookSensitivity: 200
+--- !u!114 &489345601468466201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616591164109007230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765d3303239b410887b707f3cb2c14ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundedCheckType: 1
 --- !u!114 &3127714908871797232
 MonoBehaviour:
   m_ObjectHideFlags: 0

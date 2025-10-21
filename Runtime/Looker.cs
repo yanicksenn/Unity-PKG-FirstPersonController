@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace YanickSenn.Controller.FirstPerson
@@ -24,10 +25,8 @@ namespace YanickSenn.Controller.FirstPerson
         private void Update() {
             var mouseX = LookInput.x * lookSensitivity * Time.deltaTime;
             var mouseY = LookInput.y * lookSensitivity * Time.deltaTime;
-            _lookRotation = new Vector2(
-                Mathf.Clamp(_lookRotation.x - mouseY, -60f, 60f),
-                _lookRotation.y + mouseX
-            );
+            _lookRotation.x =  Mathf.Clamp(_lookRotation.x - mouseY, -60, 60);
+            _lookRotation.y += mouseX;
             camera.transform.localRotation = Quaternion.Euler(
                 _lookRotation.x,
                 0f,
@@ -46,6 +45,14 @@ namespace YanickSenn.Controller.FirstPerson
 
         private Vector3 GetLookDirection() {
             return camera.transform.forward;
+        }
+        
+        [Serializable]
+        public struct AngleRange {
+            public bool constrained;
+            public float center;
+            public float minOffset;
+            public float maxOffset;
         }
     }
 }

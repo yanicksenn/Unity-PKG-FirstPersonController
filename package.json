@@ -10,5 +10,8 @@
         "name": "Yanick Senn",
         "email": "info@yanicksenn.com",
         "url": "" 
+    },
+    "dependencies": {
+        "com.yanicksenn.utils": "https://github.com/yanicksenn/Unity-PKG-Utils.git#1.0.0"
     }
 }

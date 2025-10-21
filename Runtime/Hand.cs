@@ -29,19 +29,27 @@ namespace YanickSenn.Controller.FirstPerson
 
         public void Grab() {
             if (_currentState is Holding) return;
+            Debug.Log($"Still grabbing ...");
             var origin = _looker.LookOrigin;
             var direction = _looker.LookDirection;
     
             if (!Physics.Raycast(origin, direction, out var hit, maxGrabbingDistance)) {
+                Debug.Log($"Nothing to grab ...");
                 return;
             }
     
-            if (!hit.transform.TryGetComponent(out Grabbable grabbable)) {
-                return;
+            Debug.Log($"Trying to grab {hit.collider.name}");
+            
+            if (hit.collider.transform.TryGetComponent(out Grabbable grabbable) && grabbable.enabled) {
+                Debug.Log($"Grabbing {hit.collider.transform.name}");
+                _currentState = new Holding(grabbable, Quaternion.Inverse(_looker.transform.rotation) * grabbable.transform.rotation);
+                grabbable.Grab(this);
             }
-    
-            _currentState = new Holding(grabbable, Quaternion.Inverse(_looker.transform.rotation) * grabbable.transform.rotation);
-            grabbable.Grab(this);
+            
+            if (hit.collider.transform.TryGetComponent(out Interactable interactable) && interactable.enabled) {
+                Debug.Log($"Interacting {hit.collider.transform.name}");
+                interactable.Interact(this);
+            }
         }
 
         public void Release() {

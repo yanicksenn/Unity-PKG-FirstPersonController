@@ -18,7 +18,6 @@ namespace YanickSenn.Controller.FirstPerson
             _collider = GetComponent<Collider>();
         }
 
-
         public void Grab(Hand hand) {
             if (_currentState is Grabbed) {
                 return;

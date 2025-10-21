@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -5,8 +6,9 @@ namespace YanickSenn.Controller.FirstPerson
 {
     [DisallowMultipleComponent,
      RequireComponent(typeof(Rigidbody)),
+     RequireComponent(typeof(Groundable)),
      RequireComponent(typeof(Looker))]
-    public class Mover : MonoBehaviour {
+    public class RigidbodyMover : AbstractMover {
     
         [FormerlySerializedAs("walkingSpeed")] [SerializeField]
         private float walkingForce = 3500f;
@@ -14,17 +16,17 @@ namespace YanickSenn.Controller.FirstPerson
         private float runningForce = 5000f;
         [SerializeField]
         private float jumpForce = 15000;
-    
-        public Vector2 MoveInput { get; set; }
-        public bool IsRunning { get; set; }
-        public bool IsGrounded => Mathf.Abs(_rigidbody.linearVelocity.y) < Mathf.Epsilon;
-
+        
         private Rigidbody _rigidbody;
+        private Groundable _groundable;
         private Looker _looker;
         private bool _isRunning;
 
+        public override bool IsGrounded => _groundable.IsGrounded;
+
         private void Awake() {
             _rigidbody = GetComponent<Rigidbody>();
+            _groundable = GetComponent<Groundable>();
             _looker = GetComponent<Looker>();
 
             _rigidbody.linearDamping = 10f;
@@ -42,9 +44,9 @@ namespace YanickSenn.Controller.FirstPerson
             }
         }
 
-        public void Jump() {
+        public override void Jump() {
             if (!IsGrounded) return;
-            _rigidbody.AddForce(Vector3.up * jumpForce);
+            _rigidbody.AddRelativeForce(Vector3.up * jumpForce);
         }
 
         private void ApplyMovementInDirection() {
@@ -52,8 +54,9 @@ namespace YanickSenn.Controller.FirstPerson
             var forward = new Vector3(lookDirection.x, 0f, lookDirection.z).normalized;
             var right = new Vector3(forward.z, 0, -forward.x);
             var moveDirection = (forward * MoveInput.y + right * MoveInput.x).normalized;
-            var speed = IsRunning ? runningForce : walkingForce;
-            _rigidbody.AddForce(speed * moveDirection);
+            var translatedMoveDirection = transform.InverseTransformDirection(moveDirection);
+            var moveForce = IsRunning ? runningForce : walkingForce;
+            _rigidbody.AddRelativeForce(moveForce * translatedMoveDirection);
         }
     }
 }
