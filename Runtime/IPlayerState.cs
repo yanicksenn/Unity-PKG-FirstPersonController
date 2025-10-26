@@ -1,8 +1,17 @@
-namespace YanickSenn.Controller.FirstPerson
-{
-    public interface IPlayerState
-    {
-        void Enable(AbstractPlayerController playerController, Looker looker, Hand hand, AbstractMover abstractMover);
+namespace YanickSenn.Controller.FirstPerson {
+    public interface IPlayerState {
+        void Enable();
         void Disable();
+
+        void OnDrawGizmos() { }
+
+        void OnDrawGizmosSelected()
+        {
+            OnDrawGizmos();
+        }
+
+        bool PermitSubState(IPlayerState playerState) {
+            return true;
+        }
     }
 }

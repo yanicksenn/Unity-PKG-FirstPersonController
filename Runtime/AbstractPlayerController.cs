@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,14 +25,22 @@ namespace YanickSenn.Controller.FirstPerson
             _currentPlayerState = _defaultPlayerState;
         }
 
-        public abstract IPlayerState GetDefaultPlayerState();
+        protected abstract IPlayerState GetDefaultPlayerState();
 
         private void OnEnable() {
-            _currentPlayerState.Enable(this, _looker, _hand, _abstractMover);
+            _currentPlayerState.Enable();
         }
 
         private void OnDisable() {
             _currentPlayerState.Disable();
+        }
+
+        private void OnDrawGizmos() {
+            _currentPlayerState?.OnDrawGizmos();
+        }
+
+        private void OnDrawGizmosSelected() {
+            _currentPlayerState?.OnDrawGizmosSelected();
         }
 
         public void PushState(IPlayerState newState) {
@@ -39,7 +48,7 @@ namespace YanickSenn.Controller.FirstPerson
             _stateStack.Push(newState);
             _currentPlayerState.Disable();
             _currentPlayerState = newState;
-            newState.Enable(this, _looker, _hand, _abstractMover);
+            newState.Enable();
         }
 
         public void PopState() {
@@ -47,7 +56,7 @@ namespace YanickSenn.Controller.FirstPerson
             var previousState = _stateStack.Pop();
             previousState.Disable();
             _currentPlayerState = _stateStack.Count == 0 ? _defaultPlayerState : _stateStack.Peek();
-            _currentPlayerState.Enable(this, _looker, _hand, _abstractMover);
+            _currentPlayerState.Enable();
         }
     }
 }

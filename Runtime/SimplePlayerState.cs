@@ -8,14 +8,16 @@ namespace YanickSenn.Controller.FirstPerson
         private InputSystemActions _actions;
         private Looker _looker;
         private Hand _hand;
-        private AbstractMover _abstractMover;
+        private AbstractMover _mover;
 
-        public void Enable(AbstractPlayerController playerController, Looker looker, Hand hand, AbstractMover abstractMover) {
+        public SimplePlayerState(Looker looker,  Hand hand, AbstractMover mover) {
+            _actions = new InputSystemActions();
             _looker = looker;
             _hand = hand;
-            _abstractMover = abstractMover;
+            _mover = mover;
+        }
 
-            _actions = new InputSystemActions();
+        public void Enable() {
             _actions.Player.SetCallbacks(this);
             _actions.Player.Enable();
         }
@@ -25,7 +27,7 @@ namespace YanickSenn.Controller.FirstPerson
         }
 
         public void OnMove(InputAction.CallbackContext context) {
-            _abstractMover.MoveInput = context.ReadValue<Vector2>();
+            _mover.MoveInput = context.ReadValue<Vector2>();
         }
 
         public void OnLook(InputAction.CallbackContext context) {
@@ -33,12 +35,12 @@ namespace YanickSenn.Controller.FirstPerson
         }
 
         public void OnSprint(InputAction.CallbackContext context) {
-            _abstractMover.IsRunning = context.ReadValueAsButton();
+            _mover.IsRunning = context.ReadValueAsButton();
         }
 
         public void OnJump(InputAction.CallbackContext context) {
             if (context.phase == InputActionPhase.Started) {
-                _abstractMover.Jump();
+                _mover.Jump();
             }
         }
 
