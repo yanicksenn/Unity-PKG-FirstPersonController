@@ -35,6 +35,10 @@ namespace YanickSenn.Controller.FirstPerson
             _currentPlayerState.Disable();
         }
 
+        private void FixedUpdate() {
+            _currentPlayerState.FixedUpdate();
+        }
+
         private void OnDrawGizmos() {
             _currentPlayerState?.OnDrawGizmos();
         }

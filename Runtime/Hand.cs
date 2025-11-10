@@ -26,30 +26,39 @@ namespace YanickSenn.Controller.FirstPerson
                     break;
             }
         }
-
-        public void Grab() {
-            if (_currentState is Holding) return;
+        
+        public bool Grab() {
+            if (_currentState is Holding) {
+                return false;
+            }
             Debug.Log($"Still grabbing ...");
             var origin = _looker.LookOrigin;
             var direction = _looker.LookDirection;
     
             if (!Physics.Raycast(origin, direction, out var hit, maxGrabbingDistance)) {
                 Debug.Log($"Nothing to grab ...");
-                return;
+                return false;
             }
     
             Debug.Log($"Trying to grab {hit.collider.name}");
-            
-            if (hit.collider.transform.TryGetComponent(out Grabbable grabbable) && grabbable.enabled) {
-                Debug.Log($"Grabbing {hit.collider.transform.name}");
+            return Grab(hit.collider.gameObject);
+        }
+
+        public bool Grab(GameObject gameObject) {
+            if (gameObject.TryGetComponent(out Grabbable grabbable) && grabbable.enabled) {
+                Debug.Log($"Grabbing {gameObject.name}");
                 _currentState = new Holding(grabbable, Quaternion.Inverse(_looker.transform.rotation) * grabbable.transform.rotation);
                 grabbable.Grab(this);
+                return true;
             }
             
-            if (hit.collider.transform.TryGetComponent(out Interactable interactable) && interactable.enabled) {
-                Debug.Log($"Interacting {hit.collider.transform.name}");
+            if (gameObject.TryGetComponent(out Interactable interactable) && interactable.enabled) {
+                Debug.Log($"Interacting {gameObject.name}");
                 interactable.Interact(this);
+                return true;
             }
+
+            return false;
         }
 
         public void Release() {

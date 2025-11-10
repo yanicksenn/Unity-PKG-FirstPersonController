@@ -1,17 +1,16 @@
-
 {
-    "name": "com.yanicksenn.firstpersoncontroller",
-    "version": "1.0.0",
-    "displayName": "First Person Controller",
-    "description": "A basic first person controller",
-    "unity": "6000.0",
-    "unityRelease": "51f1",
-    "author": {
-        "name": "Yanick Senn",
-        "email": "info@yanicksenn.com",
-        "url": "" 
-    },
-    "dependencies": {
-        "com.yanicksenn.utils": "https://github.com/yanicksenn/Unity-PKG-Utils.git#1.0.0"
-    }
+  "name": "com.yanicksenn.firstpersoncontroller",
+  "version": "1.0.2",
+  "displayName": "First Person Controller",
+  "description": "A basic first person controller",
+  "unity": "6000.0",
+  "unityRelease": "51f1",
+  "author": {
+    "name": "Yanick Senn",
+    "email": "info@yanicksenn.com",
+    "url": ""
+  },
+  "dependencies": {
+    "com.yanicksenn.utils": "https://github.com/yanicksenn/Unity-PKG-Utils.git#1.0.0"
+  }
 }

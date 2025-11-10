@@ -1,7 +1,8 @@
 namespace YanickSenn.Controller.FirstPerson {
     public interface IPlayerState {
         void Enable();
-        void Disable();
+        void Disable(); 
+        void FixedUpdate() { }
 
         void OnDrawGizmos() { }
 
