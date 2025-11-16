@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace YanickSenn.Controller.FirstPerson
+namespace YanickSenn.Controller.FirstPerson.Mover
 {
     [DisallowMultipleComponent,
      RequireComponent(typeof(Rigidbody)),

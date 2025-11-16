@@ -1,20 +1,14 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace YanickSenn.Controller.FirstPerson
-{
+namespace YanickSenn.Controller.FirstPerson {
     public class SimplePlayerState : IPlayerState, InputSystemActions.IPlayerActions {
-        private InputSystemActions _actions;
-        private Looker _looker;
-        private Hand _hand;
-        private AbstractMover _mover;
+        private readonly InputSystemActions _actions;
+        private readonly AbstractPlayerController _playerController;
 
-        public SimplePlayerState(Looker looker,  Hand hand, AbstractMover mover) {
+        public SimplePlayerState(AbstractPlayerController playerController) {
             _actions = new InputSystemActions();
-            _looker = looker;
-            _hand = hand;
-            _mover = mover;
+            _playerController = playerController;
         }
 
         public void Enable() {
@@ -27,39 +21,39 @@ namespace YanickSenn.Controller.FirstPerson
         }
 
         public void OnMove(InputAction.CallbackContext context) {
-            _mover.MoveInput = context.ReadValue<Vector2>();
+            _playerController.Mover.DoIfPresent(mover => mover.MoveInput = context.ReadValue<Vector2>());
         }
 
         public void OnLook(InputAction.CallbackContext context) {
-            _looker.LookInput = context.ReadValue<Vector2>();
+            _playerController.Looker.DoIfPresent(looker => looker.LookInput = context.ReadValue<Vector2>());
         }
 
         public void OnSprint(InputAction.CallbackContext context) {
-            _mover.IsRunning = context.ReadValueAsButton();
+            _playerController.Mover.DoIfPresent(mover => mover.IsRunning = context.ReadValueAsButton());
         }
 
         public void OnJump(InputAction.CallbackContext context) {
-            if (context.phase == InputActionPhase.Started) {
-                _mover.Jump();
-            }
+            _playerController.Mover
+                .Filter(_ => context.phase == InputActionPhase.Started)
+                .DoIfPresent(mover => mover.Jump());
         }
 
         public void OnGrab(InputAction.CallbackContext context) {
-            if (context.phase == InputActionPhase.Started) {
-                _hand.Grab();
-            }
+            _playerController.Hand
+                .Filter(_ => context.phase == InputActionPhase.Started)
+                .DoIfPresent(hand => hand.Grab());
         }
 
         public void OnRelease(InputAction.CallbackContext context) {
-            if (context.phase == InputActionPhase.Started) {
-                _hand.Release();
-            }
+            _playerController.Hand
+                .Filter(_ => context.phase == InputActionPhase.Started)
+                .DoIfPresent(hand => hand.Release());
         }
 
         public void OnThrow(InputAction.CallbackContext context) {
-            if (context.phase == InputActionPhase.Started) {
-                _hand.Throw();
-            }
+            _playerController.Hand
+                .Filter(_ => context.phase == InputActionPhase.Started)
+                .DoIfPresent(hand => hand.Throw());
         }
     }
 }

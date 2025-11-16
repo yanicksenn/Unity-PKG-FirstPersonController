@@ -6,8 +6,7 @@ namespace YanickSenn.Controller.FirstPerson {
 
         void OnDrawGizmos() { }
 
-        void OnDrawGizmosSelected()
-        {
+        void OnDrawGizmosSelected() {
             OnDrawGizmos();
         }
 

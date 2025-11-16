@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace YanickSenn.Controller.FirstPerson {
+namespace YanickSenn.Controller.FirstPerson.Mover {
     [DisallowMultipleComponent, RequireComponent(typeof(Rigidbody))]
     public class Groundable : MonoBehaviour {
         public GroundedCheckType groundedCheckType = GroundedCheckType.Raycast;

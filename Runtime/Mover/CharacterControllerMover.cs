@@ -9,6 +9,7 @@ namespace YanickSenn.Controller.FirstPerson
     {
         [SerializeField]
         private float walkingSpeed = 5f;
+
         [SerializeField]
         private float runningSpeed = 8f;
 
