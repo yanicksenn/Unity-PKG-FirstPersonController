@@ -11,6 +11,6 @@
     "url": ""
   },
   "dependencies": {
-    "com.yanicksenn.utils": "https://github.com/yanicksenn/Unity-PKG-Utils.git#1.0.0"
+    "com.yanicksenn.utils": "https://github.com/yanicksenn/com.yanicksenn.utils#1.0.4"
   }
 }
