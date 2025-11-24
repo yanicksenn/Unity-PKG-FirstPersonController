@@ -22,7 +22,7 @@ namespace YanickSenn.Controller.FirstPerson.Hand {
                 return;
             }
 
-            _currentState = new Grabbed(hand);
+            _currentState = new Grabbed();
         }
     
         public void ReleaseWithForce(Vector3 force) {
@@ -38,11 +38,6 @@ namespace YanickSenn.Controller.FirstPerson.Hand {
         private interface IState {}
         private class Idle : IState {}
 
-        private class Grabbed : IState {
-            public AbstractHand Hand { get; }
-            public Grabbed(AbstractHand hand) {
-                Hand = hand;
-            }
-        }
+        private class Grabbed : IState { }
     }
 }

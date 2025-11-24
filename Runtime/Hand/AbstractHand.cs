@@ -1,31 +1,30 @@
-using UnityEngine;
 using YanickSenn.Utils;
+using UnityEngine;
 
 namespace YanickSenn.Controller.FirstPerson.Hand
 {
     public abstract class AbstractHand : MonoBehaviour
     {
         [SerializeField] private AbstractPlayerController playerController;
-        public AbstractPlayerController PlayerController => playerController;
-
         [SerializeField] private float maxGrabbingDistance = 3;
-        public float MaxGrabbingDistance => maxGrabbingDistance;
-
         [SerializeField] private float throwForce = 10;
-        public float ThrowForce => throwForce;
 
         private Optional<Looker> _looker;
-        
-        private IState _currentState = new Idle();
-        protected IState CurrentState
+
+        public AbstractPlayerController PlayerController => playerController;
+        public float MaxGrabbingDistance => maxGrabbingDistance;
+        public float ThrowForce => throwForce;
+
+        private IHandState _currentHandState = new Idle();
+        public IHandState CurrentHandState
         {
-            get => _currentState;
+            get => _currentHandState;
             set {
-                var oldState = _currentState;
-                _currentState = value;
+                var oldState = _currentHandState;
+                _currentHandState = value;
                 
                 // TODO: Make state handling more generic.
-                switch (_currentState) {
+                switch (_currentHandState) {
                     case Idle:
                         if (oldState is Holding h1) {
                             OnRelease(h1);
@@ -59,11 +58,11 @@ namespace YanickSenn.Controller.FirstPerson.Hand
         }
 
 
-        public bool Grab() {
+        public bool Interact() {
             if (_looker.IsAbsent) return false;
             var looker = _looker.Value;
     
-            if (CurrentState is Holding) {
+            if (CurrentHandState is Holding) {
                 return false;
             }
 
@@ -71,32 +70,40 @@ namespace YanickSenn.Controller.FirstPerson.Hand
             var direction = looker.LookDirection;
     
             return Physics.Raycast(origin, direction, out var hit, maxGrabbingDistance)
-                && Grab(hit.collider.gameObject);
+                && Interact(hit.collider.gameObject);
         }
 
-        public bool Release() {
-            return Throw(Vector3.zero);
+        public bool Use() {
+            if (CurrentHandState is not Holding holding) {
+                return false;
+            }
+
+            if (!holding.Grabbable.TryGetComponent<Usable>(out var usable)) {
+                return false;
+            }
+            
+            usable.Use(this);
+            return true;
         }
 
-        public bool Throw() {
+        public bool Release(float forceMultiplier = 0.0f) {
             if (_looker.IsAbsent) return false;
             var looker = _looker.Value;
-    
-            return Throw(looker.LookDirection * throwForce);
+            return Throw(throwForce * Mathf.Clamp01(forceMultiplier) * looker.LookDirection);
         }
         
-        public abstract bool Grab(GameObject gameObject);
+        public abstract bool Interact(GameObject gameObject);
         public abstract bool Throw(Vector3 force);
 
         protected virtual void OnGrab(Holding holding) { }
         protected virtual void OnRelease(Holding holding) { }
         
 
-        protected interface IState {}
+        public interface IHandState {}
     
-        protected class Idle : IState {}
+        public class Idle : IHandState {}
 
-        protected class Holding : IState {
+        public class Holding : IHandState {
             public Grabbable Grabbable { get; }
             public Quaternion RotationOffset { get; }
             public RigidbodySnapshot RigidbodySnapshot { get; }

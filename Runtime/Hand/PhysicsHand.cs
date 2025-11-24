@@ -5,21 +5,29 @@ namespace YanickSenn.Controller.FirstPerson.Hand
     [DisallowMultipleComponent]
     public class PhysicsHand : AbstractHand {
         private void FixedUpdate() {
-            if (CurrentState is Holding holding) {
+            if (CurrentHandState is Holding) {
                 Physics.SyncTransforms();
             }
         }
 
-        public override bool Grab(GameObject gameObject) {
+        public override bool Interact(GameObject gameObject) {
             if (PlayerController.Looker.IsAbsent) return false;
             var looker = PlayerController.Looker.Value;
-            if (gameObject.TryGetComponent(out Grabbable grabbable) && grabbable.enabled) {
-                CurrentState = new Holding(grabbable, Quaternion.Inverse(looker.transform.rotation) * grabbable.transform.rotation);
+
+            var canGrab = gameObject.TryGetComponent(out Grabbable grabbable)
+                && grabbable.enabled
+                && CurrentHandState is not Holding;
+
+            if (canGrab) {
+                CurrentHandState = new Holding(grabbable, Quaternion.Inverse(looker.transform.rotation) * grabbable.transform.rotation);
                 grabbable.Grab(this);
                 return true;
             }
-            
-            if (gameObject.TryGetComponent(out Interactable interactable) && interactable.enabled) {
+
+            var canInteract = gameObject.TryGetComponent(out Interactable interactable) 
+                && interactable.enabled;
+
+            if (canInteract) {
                 interactable.Interact(this);
                 return true;
             }
@@ -28,8 +36,8 @@ namespace YanickSenn.Controller.FirstPerson.Hand
         }
 
         public override bool Throw(Vector3 force) {
-            if (CurrentState is not Holding holding) return false;
-            CurrentState = new Idle();
+            if (CurrentHandState is not Holding holding) return false;
+            CurrentHandState = new Idle();
             holding.Grabbable.ReleaseWithForce(force);
             return true;
         }

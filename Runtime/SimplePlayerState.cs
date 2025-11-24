@@ -41,19 +41,19 @@ namespace YanickSenn.Controller.FirstPerson {
         public void OnGrab(InputAction.CallbackContext context) {
             _playerController.Hand
                 .Filter(_ => context.phase == InputActionPhase.Started)
-                .DoIfPresent(hand => hand.Grab());
+                .DoIfPresent(hand => hand.Interact());
         }
 
         public void OnRelease(InputAction.CallbackContext context) {
             _playerController.Hand
                 .Filter(_ => context.phase == InputActionPhase.Started)
-                .DoIfPresent(hand => hand.Release());
+                .DoIfPresent(hand => hand.Release(0f));
         }
 
         public void OnThrow(InputAction.CallbackContext context) {
             _playerController.Hand
                 .Filter(_ => context.phase == InputActionPhase.Started)
-                .DoIfPresent(hand => hand.Throw());
+                .DoIfPresent(hand => hand.Release());
         }
     }
 }
