@@ -4,7 +4,7 @@ namespace YanickSenn.Controller.FirstPerson.Hand
 {
     [DisallowMultipleComponent]
     public class PhysicsHand : AbstractHand {
-        private void FixedUpdate() {
+        private void LateUpdate() {
             if (CurrentHandState is Holding) {
                 Physics.SyncTransforms();
             }

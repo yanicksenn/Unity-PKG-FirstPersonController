@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace YanickSenn.Controller.FirstPerson.Hand {
@@ -42,6 +43,10 @@ namespace YanickSenn.Controller.FirstPerson.Hand {
             _currentState = new Idle();
             _rigidbody.linearVelocity = Vector3.zero;
             _rigidbody.AddForce(force);
+        }
+
+        private void LateUpdate() {
+            Physics.SyncTransforms();
         }
 
         private interface IState {}
