@@ -1,54 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
-using YanickSenn.Utils.Control;
 
 namespace YanickSenn.Controller.FirstPerson
 {
-    [DisallowMultipleComponent]
-    public abstract class AbstractPlayerController<TMover, TMoverConfig> : MonoBehaviour 
+    public class PlayerControllerImpl<TMover, TMoverConfig> 
             where TMover : AbstractMover<TMoverConfig> 
             where TMoverConfig : IMoverConfig {
         private readonly Stack<IPlayerState> _stateStack = new();
 
-        private IPlayerState _defaultPlayerState;
+        private readonly Looker _looker;
+        private readonly Hand.Hand _hand;
+        private readonly TMover _mover;
+        private readonly IPlayerState _defaultPlayerState;
+
         private IPlayerState _currentPlayerState;
-
-        public Optional<Looker> Looker => GetLooker();
-        public Optional<Hand.Hand> Hand => GetHand();
-        public Optional<TMover> Mover => GetMover();
         public IPlayerState CurrentPlayerState => _currentPlayerState;
+        public Looker Looker => _looker;
+        public Hand.Hand Hand => _hand;
+        public TMover Mover => _mover;
 
-        private void Awake() {
-            _defaultPlayerState = GetDefaultPlayerState();
+        public PlayerControllerImpl(Looker looker, Hand.Hand hand, TMover mover, IPlayerState defaultPlayerState) {
+            _looker = looker;
+            _hand = hand;
+            _mover = mover;
+            _defaultPlayerState = defaultPlayerState;
             _currentPlayerState = _defaultPlayerState;
         }
 
-        protected abstract Optional<Looker> GetLooker();
-        protected abstract Optional<Hand.Hand> GetHand();
-        protected abstract Optional<TMover> GetMover();
-        protected abstract IPlayerState GetDefaultPlayerState();
-
-        private void OnEnable() {
+        public void Start() {
             _currentPlayerState.Enable();
         }
 
-        private void OnDisable() {
-            _currentPlayerState.Disable();
-        }
-
-        private void Update() {
+        public void Update() {
             _currentPlayerState.Update();
         }
 
-        private void FixedUpdate() {
+        public void FixedUpdate() {
             _currentPlayerState.FixedUpdate();
         }
 
-        private void OnDrawGizmos() {
+        public void OnDrawGizmos() {
             _currentPlayerState?.OnDrawGizmos();
         }
 
-        private void OnDrawGizmosSelected() {
+        public void OnDrawGizmosSelected() {
             _currentPlayerState?.OnDrawGizmosSelected();
         }
 
