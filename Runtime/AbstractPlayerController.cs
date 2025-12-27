@@ -1,32 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
-using YanickSenn.Controller.FirstPerson.Hand;
-using YanickSenn.Utils;
 using YanickSenn.Utils.Control;
 
 namespace YanickSenn.Controller.FirstPerson
 {
     [DisallowMultipleComponent]
-    public abstract class AbstractPlayerController : MonoBehaviour {
+    public abstract class AbstractPlayerController<TMover, TMoverConfig> : MonoBehaviour 
+            where TMover : AbstractMover<TMoverConfig> 
+            where TMoverConfig : IMoverConfig {
         private readonly Stack<IPlayerState> _stateStack = new();
-
-        [SerializeField] private Optional<Looker> looker;
-        [SerializeField] private Optional<AbstractHand> hand;
-        [SerializeField] private Optional<AbstractMover> mover;
-        
-        public Optional<Looker> Looker => looker;
-        public Optional<AbstractHand> Hand => hand;
-        public Optional<AbstractMover> Mover => mover;
-        public IPlayerState CurrentPlayerState => _currentPlayerState;
 
         private IPlayerState _defaultPlayerState;
         private IPlayerState _currentPlayerState;
+
+        public Optional<Looker> Looker => GetLooker();
+        public Optional<Hand.Hand> Hand => GetHand();
+        public Optional<TMover> Mover => GetMover();
+        public IPlayerState CurrentPlayerState => _currentPlayerState;
 
         private void Awake() {
             _defaultPlayerState = GetDefaultPlayerState();
             _currentPlayerState = _defaultPlayerState;
         }
 
+        protected abstract Optional<Looker> GetLooker();
+        protected abstract Optional<Hand.Hand> GetHand();
+        protected abstract Optional<TMover> GetMover();
         protected abstract IPlayerState GetDefaultPlayerState();
 
         private void OnEnable() {

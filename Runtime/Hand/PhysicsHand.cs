@@ -3,17 +3,14 @@ using UnityEngine;
 namespace YanickSenn.Controller.FirstPerson.Hand
 {
     [DisallowMultipleComponent]
-    public class PhysicsHand : AbstractHand {
+    public class Hand : AbstractHand {
         private void LateUpdate() {
             if (CurrentHandState is Holding) {
-                Physics.SyncTransforms();
+                //Physics.SyncTransforms();
             }
         }
 
         public override bool Interact(GameObject gameObject) {
-            if (PlayerController.Looker.IsAbsent) return false;
-            var looker = PlayerController.Looker.Value;
-
             var canGrab = gameObject.TryGetComponent(out Grabbable grabbable)
                 && grabbable.enabled
                 && CurrentHandState is not Holding;

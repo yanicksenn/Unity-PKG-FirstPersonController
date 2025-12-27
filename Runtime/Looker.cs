@@ -1,15 +1,13 @@
 using System;
 using UnityEngine;
+using YanickSenn.Utils.Variables;
 
 namespace YanickSenn.Controller.FirstPerson
 {
     [DisallowMultipleComponent]
-    public class Looker : MonoBehaviour {
-        [SerializeField]
-        private Transform cameraAnchor;
-        
-        [SerializeField]
-        private float lookSensitivity;
+    public class Looker : PlayerOwned {
+        [SerializeField] private Transform cameraAnchor;
+        [SerializeField] private FloatReference lookSensitivity = new(200f);
 
         public Vector3 LookOrigin => GetLookOrigin();
         public Vector3 LookDirection => GetLookDirection();
@@ -23,8 +21,8 @@ namespace YanickSenn.Controller.FirstPerson
 
         public void UpdateLookInput(Vector2 lookInput) {
             if (lookInput.sqrMagnitude < Mathf.Epsilon) return;
-            var mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
-            var mouseY = lookInput.y * lookSensitivity * Time.deltaTime;
+            var mouseX = lookInput.x * lookSensitivity.Value * Time.deltaTime;
+            var mouseY = lookInput.y * lookSensitivity.Value * Time.deltaTime;
             _lookRotation.x =  Mathf.Clamp(_lookRotation.x - mouseY, -60, 60);
             _lookRotation.y += mouseX;
     

@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 
 namespace YanickSenn.Controller.FirstPerson {
-    public abstract class AbstractMover : MonoBehaviour {
+    public abstract class AbstractMover<T> : PlayerOwned where T : IMoverConfig {
         public Vector2 MoveInput { get; set; }
         public bool IsRunning { get; set; }
         
@@ -14,16 +13,4 @@ namespace YanickSenn.Controller.FirstPerson {
     }
     
     public interface IMoverConfig { }
-    
-    [Serializable]
-    public class WalkingConfig : IMoverConfig {
-        public float walkingSpeed = 5f;
-        public float runningSpeed = 8f;
-        public float jumpHeight = 1.5f;
-    }
-    
-    [Serializable]
-    public class SwimmingConfig : IMoverConfig {
-        public float swimmingSpeed = 5f;
-    }
 }

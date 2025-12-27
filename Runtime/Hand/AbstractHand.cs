@@ -1,19 +1,12 @@
-using YanickSenn.Utils;
 using UnityEngine;
-using YanickSenn.Utils.Control;
 using YanickSenn.Utils.Snapshots;
 
 namespace YanickSenn.Controller.FirstPerson.Hand
 {
-    public abstract class AbstractHand : MonoBehaviour
-    {
-        [SerializeField] private AbstractPlayerController playerController;
+    public abstract class AbstractHand : PlayerOwned {
         [SerializeField] private float maxGrabbingDistance = 3;
         [SerializeField] private float throwForce = 10;
 
-        private Optional<Looker> _looker;
-
-        public AbstractPlayerController PlayerController => playerController;
         public float MaxGrabbingDistance => maxGrabbingDistance;
         public float ThrowForce => throwForce;
 
@@ -46,35 +39,6 @@ namespace YanickSenn.Controller.FirstPerson.Hand
             }
         }
 
-        private void Awake() {
-            _looker = playerController.Looker;
-        }
-
-        private void OnDrawGizmos() {
-            if (_looker.IsAbsent) return;
-            var looker = _looker.Value;
-            Gizmos.color = Color.red;
-            var origin = looker.LookOrigin;
-            var direction = looker.LookDirection;
-            Gizmos.DrawLine(origin, origin + direction * MaxGrabbingDistance);
-        }
-
-
-        public bool Interact() {
-            if (_looker.IsAbsent) return false;
-            var looker = _looker.Value;
-    
-            if (CurrentHandState is Holding) {
-                return false;
-            }
-
-            var origin = looker.LookOrigin;
-            var direction = looker.LookDirection;
-    
-            return Physics.Raycast(origin, direction, out var hit, maxGrabbingDistance)
-                && Interact(hit.collider.gameObject);
-        }
-
         public bool Use() {
             if (CurrentHandState is not Holding holding) {
                 return false;
@@ -88,10 +52,8 @@ namespace YanickSenn.Controller.FirstPerson.Hand
             return true;
         }
 
-        public bool Release(float forceMultiplier = 0.0f) {
-            if (_looker.IsAbsent) return false;
-            var looker = _looker.Value;
-            return Throw(throwForce * Mathf.Clamp01(forceMultiplier) * looker.LookDirection);
+        public bool Release(Vector3 direction, float forceMultiplier = 0.0f) {
+            return Throw(throwForce * Mathf.Clamp01(forceMultiplier) * direction);
         }
         
         public abstract bool Interact(GameObject gameObject);

@@ -11,12 +11,12 @@ namespace YanickSenn.Controller.FirstPerson.Hand {
         private InteractionEvent onInteractEvent = new();
         public InteractionEvent OnInteractEvent => onInteractEvent;
 
-        public void Interact(AbstractHand hand) {
-            onInteractEvent.Invoke(hand.gameObject);
+        public void Interact(Hand hand) {
+            onInteractEvent.Invoke(hand);
         }
 
         [Serializable]
-        public class InteractionEvent : UnityEvent<GameObject> {
+        public class InteractionEvent : UnityEvent<Hand> {
             
         }
     }
