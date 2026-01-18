@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using YanickSenn.CodeGen.Attributes;
 using YanickSenn.Utils.Variables;
 
 namespace YanickSenn.Controller.FirstPerson.Mover
 {
-    [DisallowMultipleComponent, 
+    [DisallowMultipleComponent,
         RequireComponent(typeof(CharacterController)),
         RequireComponent(typeof(Looker))]
     public class CharacterControllerMover : AbstractMover<CharacterControllerMover.CharacterControllerMoverConfig> {
@@ -54,7 +55,7 @@ namespace YanickSenn.Controller.FirstPerson.Mover
                 var moveDirection = (forward * MoveInput.y + right * MoveInput.x).normalized;
                 _horizontalVelocity = moveDirection * currentSpeed;
             }
-    
+
             _velocity.y += Physics.gravity.y * Time.fixedDeltaTime;
 
             var finalVelocity = _horizontalVelocity + new Vector3(0, _velocity.y, 0);
@@ -70,14 +71,14 @@ namespace YanickSenn.Controller.FirstPerson.Mover
 
         private void ApplyJump(WalkingConfig walkingConfig) {
             if (!IsGrounded) return;
-            
+
             // Calculate the required upward velocity to reach the desired jumpHeight
             // This is derived from the physics formula: v = sqrt(h * -2 * g)
             _velocity.y = Mathf.Sqrt(walkingConfig.jumpHeight.Value * -2f * Physics.gravity.y);
         }
-        
+
         public interface CharacterControllerMoverConfig : IMoverConfig {}
-        
+
         [Serializable]
         [GenerateVariable]
         public class WalkingConfig : CharacterControllerMoverConfig {
@@ -85,7 +86,7 @@ namespace YanickSenn.Controller.FirstPerson.Mover
             public FloatReference runningSpeed = new(8f);
             public FloatReference jumpHeight = new(1.5f);
         }
-    
+
         [Serializable]
         [GenerateVariable]
         public class SwimmingConfig : CharacterControllerMoverConfig {

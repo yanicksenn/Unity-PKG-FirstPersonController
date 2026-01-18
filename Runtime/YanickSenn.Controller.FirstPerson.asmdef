@@ -3,7 +3,8 @@
     "rootNamespace": "YanickSenn.Controller.FirstPerson",
     "references": [
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:125d0d0d7d24f4ff2afd6807d1a1951c"
+        "GUID:125d0d0d7d24f4ff2afd6807d1a1951c",
+        "GUID:5ac117c3cfa7c44b4868f32761565baa"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
